@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOOP.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E7DFCF;
+    --ink: #29291F;
+    --rust: #A8471F;
+    --mustard: #BE9138;
+    --moss: #5F6B3F;
+    --line: #B5A788;
+    --card-bg: #F4EFE3;
+    --font-display: 'Zilla Slab', Georgia, serif;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+    --font-body: 'Work Sans', -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 60px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+  }
+
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: 0.5px;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .counter {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--rust);
+  }
+
+  .repeat-icon {
+    display: inline-block;
+    font-size: 16px;
+    transform-origin: center;
+  }
+
+  .repeat-icon.spinning {
+    animation: spin 2.2s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .repeat-icon.spinning { animation: none; }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .tagline {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--moss);
+    margin: 8px 0 28px;
+    letter-spacing: 0.3px;
+  }
+
+  .session-note {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mustard);
+    background: var(--card-bg);
+    border: 1px dashed var(--mustard);
+    border-radius: 3px;
+    padding: 8px 10px;
+    margin: -14px 0 20px;
+  }
+
+  /* ---------- viewer ---------- */
+  .viewer-frame {
+    background: var(--ink);
+    border-radius: 6px;
+    padding: 8px;
+    box-shadow: 0 3px 0 var(--line);
+  }
+
+  .viewer-inner {
+    background: #000;
+    border-radius: 3px;
+    aspect-ratio: 9 / 13;
+    max-height: 520px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .viewer-inner iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .tiktok-mount, .tiktok-mount blockquote {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tiktok-mount iframe {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .empty-state, .link-card {
+    color: #EFE8D8;
+    font-family: var(--font-body);
+    text-align: center;
+    padding: 32px 24px;
+  }
+
+  .empty-state .big {
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+
+  .empty-state .small {
+    font-size: 13px;
+    color: #C9C0A9;
+    line-height: 1.5;
+  }
+
+  .link-card .platform-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--mustard);
+    margin-bottom: 10px;
+  }
+
+  .link-card a {
+    display: inline-block;
+    margin-top: 14px;
+    color: #fff;
+    background: var(--rust);
+    padding: 9px 16px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .link-card .note {
+    font-size: 12px;
+    color: #C9C0A9;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* ---------- controls ---------- */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin: 16px 0 30px;
+  }
+
+  .ctrl-btn {
+    font-family: var(--font-mono);
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    border-radius: 3px;
+    padding: 8px 14px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .ctrl-btn:hover { background: var(--ink); color: var(--bg); }
+
+  .ctrl-btn:focus-visible {
+    outline: 2px solid var(--rust);
+    outline-offset: 2px;
+  }
+
+  .ctrl-btn.play-pause {
+    min-width: 118px;
+    font-weight: 500;
+  }
+
+  /* ---------- divider ---------- */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 6px 0 14px;
+  }
+
+  .divider span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--moss);
+    white-space: nowrap;
+  }
+
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 0;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* ---------- filmstrip ---------- */
+  .filmstrip {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+  }
+
+  .filmstrip::-webkit-scrollbar { height: 5px; }
+  .filmstrip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+  .chip {
+    flex: 0 0 auto;
+    width: 64px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--line);
+    border-radius: 4px;
+    padding: 6px 4px 8px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .chip.active {
+    border-color: var(--rust);
+    background: #fff;
+  }
+
+  .chip .idx {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--moss);
+    display: block;
+  }
+
+  .chip .plat {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-top: 3px;
+    display: block;
+  }
+
+  .chip .del {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--rust);
+    color: #fff;
+    border: none;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---------- add form ---------- */
+  .add-form label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--moss);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .add-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .add-row input {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 11px 12px;
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    background: var(--card-bg);
+    color: var(--ink);
+    min-width: 0;
+  }
+
+  .add-row input:focus-visible {
+    outline: 2px solid var(--rust);
+    outline-offset: 1px;
+  }
+
+  .add-row button {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    border-radius: 3px;
+    padding: 0 16px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .add-row button:hover { background: var(--rust); }
+
+  .error-msg {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--rust);
+    margin-top: 8px;
+    min-height: 14px;
+  }
+
+  .error-msg.status {
+    color: var(--moss);
+  }
+
+  .add-row button:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .foot-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 26px;
+  }
+
+  .hint {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--line);
+  }
+
+  .clear-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--moss);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  .loading-msg {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--moss);
+    text-align: center;
+    padding: 40px 0;
+  }
+</style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="loading-msg" id="loadingMsg">loading your loop…</div>
+  </div>
+
+<script>
+(function () {
+  var STORAGE_KEY = 'loop-items';
+  var INTERVAL_MS = 20000;
+
+  var items = [];
+  var currentIndex = 0;
+  var isPlaying = true;
+  var timer = null;
+  var ready = false;
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function detectContent(rawUrl) {
+    var trimmed = (rawUrl || '').trim();
+    if (!trimmed) return null;
+    var withProto = /^https?:\/\//i.test(trimmed) ? trimmed : 'https://' + trimmed;
+    var u;
+    try { u = new URL(withProto); } catch (e) { return null; }
+    var host = u.hostname.replace(/^www\./, '').toLowerCase();
+
+    if (host === 'youtu.be') {
+      var id1 = u.pathname.replace(/^\//, '');
+      if (id1) return { platform: 'youtube', label: 'YouTube', embedId: id1, url: withProto };
+    }
+    if (host.indexOf('youtube.com') !== -1) {
+      if (u.pathname === '/watch') {
+        var v = u.searchParams.get('v');
+        if (v) return { platform: 'youtube', label: 'YouTube', embedId: v, url: withProto };
+      }
+      var shorts = u.pathname.match(/\/shorts\/([^/?]+)/);
+      if (shorts) return { platform: 'youtube', label: 'YouTube', embedId: shorts[1], url: withProto };
+      var emb = u.pathname.match(/\/embed\/([^/?]+)/);
+      if (emb) return { platform: 'youtube', label: 'YouTube', embedId: emb[1], url: withProto };
+    }
+    if (host === 'vt.tiktok.com' || host === 'vm.tiktok.com') {
+      return { platform: 'tiktok-short', label: 'TikTok', embedId: null, url: withProto };
+    }
+    if (host.indexOf('tiktok.com') !== -1) {
+      var ttShort = u.pathname.match(/^\/t\/([^/]+)/);
+      if (ttShort) return { platform: 'tiktok-short', label: 'TikTok', embedId: null, url: withProto };
+      var tt = u.pathname.match(/\/video\/(\d+)/);
+      if (tt) return { platform: 'tiktok', label: 'TikTok', embedId: tt[1], url: withProto };
+    }
+    if (host.indexOf('twitter.com') !== -1 || host === 'x.com') {
+      var tw = u.pathname.match(/\/status\/(\d+)/);
+      if (tw) return { platform: 'twitter', label: 'X', embedId: tw[1], url: withProto };
+    }
+
+    var label = host;
+    if (host.indexOf('instagram.com') !== -1) label = 'Instagram';
+    else if (host.indexOf('facebook.com') !== -1) label = 'Facebook';
+    else if (host.indexOf('reddit.com') !== -1) label = 'Reddit';
+    else if (host.indexOf('pinterest') !== -1) label = 'Pinterest';
+
+    return { platform: 'link', label: label, embedId: null, url: withProto };
+  }
+
+  function buildLinkCard(item, noteText) {
+    var card = document.createElement('div');
+    card.className = 'link-card';
+    var plat = document.createElement('div');
+    plat.className = 'platform-label';
+    plat.textContent = item.label;
+    var body = document.createElement('div');
+    body.textContent = 'No inline preview for this one.';
+    var link = document.createElement('a');
+    link.href = item.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'open original ↗';
+    var note = document.createElement('div');
+    note.className = 'note';
+    note.textContent = noteText || "it's still in your loop — it just opens in a new tab instead of playing inline.";
+    card.appendChild(plat);
+    card.appendChild(body);
+    card.appendChild(link);
+    card.appendChild(note);
+    return card;
+  }
+
+  var tiktokMountToken = 0;
+
+  function mountTikTok(container, item) {
+    tiktokMountToken += 1;
+    var myToken = tiktokMountToken;
+
+    var bq = document.createElement('blockquote');
+    bq.className = 'tiktok-embed';
+    bq.setAttribute('cite', item.url);
+    bq.setAttribute('data-video-id', item.embedId);
+    bq.style.maxWidth = '100%';
+    bq.style.minWidth = '325px';
+    bq.style.margin = '0';
+    bq.appendChild(document.createElement('section'));
+    container.appendChild(bq);
+
+    // TikTok's embed script only scans the page once on load, so re-inject
+    // it fresh each time we mount a new blockquote to force a re-scan.
+    var old = document.getElementById('tiktok-embed-script');
+    if (old) old.parentNode.removeChild(old);
+    var script = document.createElement('script');
+    script.id = 'tiktok-embed-script';
+    script.async = true;
+    script.src = 'https://www.tiktok.com/embed.js';
+    document.body.appendChild(script);
+
+    // If nothing rendered after a few seconds (blocked, private, region-locked,
+    // or the embed script didn't load), fall back to a plain link card.
+    setTimeout(function () {
+      if (myToken !== tiktokMountToken) return; // user already navigated away
+      if (!container.querySelector('iframe')) {
+        container.innerHTML = '';
+        container.appendChild(buildLinkCard(item,
+          "TikTok didn't load an inline preview here — could be region-locked, private, or blocked by your browser. It's still saved in your loop."));
+      }
+    }, 4000);
+  }
+
+  function buildShortLinkHelpCard(item) {
+    var card = document.createElement('div');
+    card.className = 'link-card';
+    var plat = document.createElement('div');
+    plat.className = 'platform-label';
+    plat.textContent = 'TikTok · short link';
+    var body = document.createElement('div');
+    body.textContent = "Short links (vt./vm.tiktok.com) don't include the video ID, so this can't preview automatically.";
+    var note = document.createElement('div');
+    note.className = 'note';
+    note.textContent = 'open this link in a new tab, wait for it to redirect, then copy the full URL from the address bar — it should look like tiktok.com/@user/video/1234567890 — and paste that instead.';
+    var link = document.createElement('a');
+    link.href = item.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'open short link ↗';
+    card.appendChild(plat);
+    card.appendChild(body);
+    card.appendChild(link);
+    card.appendChild(note);
+    return card;
+  }
+
+  function embedNode(item) {
+    var wrap = document.createElement('div');
+    if (item.platform === 'youtube') {
+      wrap.innerHTML = '<iframe src="https://www.youtube.com/embed/' + item.embedId +
+        '?rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      return wrap.firstChild;
+    } else if (item.platform === 'tiktok') {
+      var mount = document.createElement('div');
+      mount.className = 'tiktok-mount';
+      mount.style.width = '100%';
+      mount.style.height = '100%';
+      mount.style.overflowY = 'auto';
+      return mount;
+    } else if (item.platform === 'twitter') {
+      wrap.innerHTML = '<iframe src="https://platform.twitter.com/embed/Tweet.html?id=' +
+        item.embedId + '&dnt=true" allow="autoplay"></iframe>';
+      return wrap.firstChild;
+    } else if (item.platform === 'tiktok-short') {
+      return buildShortLinkHelpCard(item);
+    }
+    return buildLinkCard(item);
+  }
+
+  // Three storage layers, in order of preference:
+  // 1. window.storage — only exists inside Claude's artifact environment.
+  // 2. localStorage — a normal browser feature, works once this is hosted as
+  //    a real website (e.g. GitHub Pages), persists across visits.
+  // 3. plain in-memory — last resort (e.g. private/incognito browsing, or a
+  //    local file:// page where storage can behave unpredictably).
+  var memoryFallback = {};
+  var hasRealStorage = !!(window.storage && typeof window.storage.get === 'function' && typeof window.storage.set === 'function');
+  var hasLocalStorage = false;
+  if (!hasRealStorage) {
+    try {
+      var testKey = '__loop_test__';
+      window.localStorage.setItem(testKey, '1');
+      window.localStorage.removeItem(testKey);
+      hasLocalStorage = true;
+    } catch (e) {
+      hasLocalStorage = false;
+    }
+  }
+  if (!hasRealStorage && !hasLocalStorage) {
+    console.warn('LOOP: no persistent storage available here — using session-only memory. Your loop will not be saved after you close this page.');
+  }
+
+  async function loadItems() {
+    if (hasRealStorage) {
+      try {
+        var res = await window.storage.get(STORAGE_KEY, false);
+        if (res && res.value) {
+          var parsed = JSON.parse(res.value);
+          if (Array.isArray(parsed)) items = parsed;
+        }
+      } catch (e) {
+        items = [];
+      }
+      return;
+    }
+    if (hasLocalStorage) {
+      try {
+        var raw = window.localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          var parsedLocal = JSON.parse(raw);
+          if (Array.isArray(parsedLocal)) items = parsedLocal;
+        }
+      } catch (e) {
+        items = [];
+      }
+    }
+  }
+
+  async function saveItems() {
+    if (hasRealStorage) {
+      try {
+        await window.storage.set(STORAGE_KEY, JSON.stringify(items), false);
+      } catch (e) {
+        console.error('save failed', e);
+      }
+      return;
+    }
+    if (hasLocalStorage) {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+        return;
+      } catch (e) {
+        // fall through to memory
+      }
+    }
+    memoryFallback[STORAGE_KEY] = items;
+  }
+
+  function startTimer() {
+    clearInterval(timer);
+    if (!isPlaying || items.length < 2) return;
+    timer = setInterval(function () {
+      currentIndex = (currentIndex + 1) % items.length;
+      render();
+    }, INTERVAL_MS);
+  }
+
+  function withTimeout(promise, ms) {
+    return Promise.race([
+      promise,
+      new Promise(function (resolve) { setTimeout(function () { resolve(null); }, ms); })
+    ]);
+  }
+
+  async function tryJinaResolve(shortUrl) {
+    try {
+      var res = await fetch('https://r.jina.ai/' + shortUrl, {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) return null;
+      var data = await res.json();
+      return (data && data.data && data.data.url) || (data && data.url) || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function tryAllOriginsResolve(shortUrl) {
+    try {
+      var proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(shortUrl);
+      var res = await fetch(proxyUrl);
+      if (!res.ok) return null;
+      var data = await res.json();
+      return (data && data.status && data.status.url) || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function resolveShortLink(shortUrl) {
+    var finalUrl = await withTimeout(tryJinaResolve(shortUrl), 6000);
+    if (finalUrl) return finalUrl;
+    finalUrl = await withTimeout(tryAllOriginsResolve(shortUrl), 6000);
+    return finalUrl;
+  }
+
+  function buildApp() {
+    var app = document.getElementById('app');
+    app.innerHTML =
+      '<header>' +
+        '<h1 class="wordmark">LOOP.</h1>' +
+        '<div class="counter"><span class="repeat-icon" id="repeatIcon">&#8635;</span><span id="counterText">00 / 00</span></div>' +
+      '</header>' +
+      '<div class="tagline">what you add is what you get.</div>' +
+      (hasRealStorage || hasLocalStorage ? '' : '<div class="session-note">session only — this loop won\'t be saved once you close this page.</div>') +
+      '<div class="viewer-frame"><div class="viewer-inner" id="viewerInner"></div></div>' +
+      '<div class="controls">' +
+        '<button class="ctrl-btn" id="prevBtn" aria-label="Previous">&#9664;</button>' +
+        '<button class="ctrl-btn play-pause" id="playPauseBtn">Pause loop</button>' +
+        '<button class="ctrl-btn" id="nextBtn" aria-label="Next">&#9654;</button>' +
+      '</div>' +
+      '<div class="divider"><span>your loop</span></div>' +
+      '<div class="filmstrip" id="filmstrip"></div>' +
+      '<form class="add-form" id="addForm">' +
+        '<label for="urlInput">paste a link — youtube, tiktok, x, or anything else</label>' +
+        '<div class="add-row">' +
+          '<input type="text" id="urlInput" placeholder="https://..." autocomplete="off" />' +
+          '<button type="submit" id="addBtn">Add to loop</button>' +
+        '</div>' +
+        '<div class="error-msg" id="errorMsg"></div>' +
+      '</form>' +
+      '<div class="foot-row">' +
+        '<span class="hint">nothing plays here that you didn\'t add.</span>' +
+        '<button class="clear-link" id="clearBtn">clear loop</button>' +
+      '</div>';
+
+    document.getElementById('prevBtn').addEventListener('click', function () {
+      if (items.length === 0) return;
+      currentIndex = (currentIndex - 1 + items.length) % items.length;
+      startTimer();
+      render();
+    });
+    document.getElementById('nextBtn').addEventListener('click', function () {
+      if (items.length === 0) return;
+      currentIndex = (currentIndex + 1) % items.length;
+      startTimer();
+      render();
+    });
+    document.getElementById('playPauseBtn').addEventListener('click', function () {
+      isPlaying = !isPlaying;
+      startTimer();
+      render();
+    });
+    document.getElementById('clearBtn').addEventListener('click', function () {
+      if (items.length === 0) return;
+      var ok = window.confirm("Clear everything from your loop? This can't be undone.");
+      if (!ok) return;
+      items = [];
+      currentIndex = 0;
+      saveItems();
+      startTimer();
+      render();
+    });
+    document.getElementById('addForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var input = document.getElementById('urlInput');
+      var errorMsg = document.getElementById('errorMsg');
+      var addBtn = document.getElementById('addBtn');
+      var parsed = detectContent(input.value);
+      if (!parsed) {
+        errorMsg.textContent = "that doesn't look like a link — try pasting the full URL.";
+        return;
+      }
+      errorMsg.textContent = '';
+
+      if (parsed.platform === 'tiktok-short') {
+        errorMsg.className = 'error-msg status';
+        errorMsg.textContent = 'resolving short link…';
+        addBtn.disabled = true;
+        var finalUrl = await resolveShortLink(parsed.url);
+        var reparsed = finalUrl ? detectContent(finalUrl) : null;
+        addBtn.disabled = false;
+        if (reparsed && reparsed.platform === 'tiktok') {
+          parsed = reparsed;
+          errorMsg.textContent = '';
+          errorMsg.className = 'error-msg';
+        } else {
+          errorMsg.textContent = "couldn't auto-resolve that one — added with an 'open original' link instead.";
+          errorMsg.className = 'error-msg status';
+        }
+      }
+
+      parsed.id = Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+      items.push(parsed);
+      currentIndex = items.length - 1;
+      input.value = '';
+      saveItems();
+      startTimer();
+      render();
+    });
+  }
+
+  function render() {
+    var counterText = document.getElementById('counterText');
+    var repeatIcon = document.getElementById('repeatIcon');
+    var viewerInner = document.getElementById('viewerInner');
+    var filmstrip = document.getElementById('filmstrip');
+    var playPauseBtn = document.getElementById('playPauseBtn');
+
+    if (items.length === 0) {
+      counterText.textContent = '00 / 00';
+      viewerInner.innerHTML = '';
+      var empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.innerHTML = '<div class="big">your loop is empty</div>' +
+        '<div class="small">paste a link below to start.<br>that\'s the only thing that\'ll play here.</div>';
+      viewerInner.appendChild(empty);
+      filmstrip.innerHTML = '';
+      playPauseBtn.disabled = true;
+      playPauseBtn.textContent = 'Pause loop';
+      repeatIcon.classList.remove('spinning');
+      return;
+    }
+
+    playPauseBtn.disabled = false;
+    if (currentIndex >= items.length) currentIndex = items.length - 1;
+    if (currentIndex < 0) currentIndex = 0;
+
+    counterText.textContent = pad(currentIndex + 1) + ' / ' + pad(items.length);
+    repeatIcon.classList.toggle('spinning', isPlaying && items.length > 1);
+    playPauseBtn.textContent = isPlaying ? 'Pause loop' : 'Play loop';
+
+    tiktokMountToken += 1; // invalidate any pending tiktok fallback timer from the previous item
+    viewerInner.innerHTML = '';
+    var currentItem = items[currentIndex];
+    var node = embedNode(currentItem);
+    viewerInner.appendChild(node);
+    if (currentItem.platform === 'tiktok') {
+      mountTikTok(node, currentItem);
+    }
+
+    filmstrip.innerHTML = '';
+    items.forEach(function (item, i) {
+      var chip = document.createElement('div');
+      chip.className = 'chip' + (i === currentIndex ? ' active' : '');
+      chip.innerHTML = '<span class="idx">' + pad(i + 1) + '</span><span class="plat">' +
+        (item.label.length > 8 ? item.label.slice(0, 7) + '…' : item.label) + '</span>' +
+        '<button class="del" aria-label="Remove">&times;</button>';
+      chip.addEventListener('click', function (e) {
+        if (e.target.classList.contains('del')) return;
+        currentIndex = i;
+        startTimer();
+        render();
+      });
+      chip.querySelector('.del').addEventListener('click', function (e) {
+        e.stopPropagation();
+        items.splice(i, 1);
+        saveItems();
+        startTimer();
+        render();
+      });
+      filmstrip.appendChild(chip);
+    });
+  }
+
+  async function init() {
+    await loadItems();
+    buildApp();
+    render();
+    startTimer();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
